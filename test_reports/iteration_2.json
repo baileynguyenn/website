@@ -1,0 +1,35 @@
+{
+  "summary": "Iteration 2 targeted follow-up. Refactored /app/backend/tests/test_minhlam_regression.py to be xdist-loadscope-safe (class-scoped seed + Mongo teardown, credentials from backend/.env via python-dotenv, no cross-class ID sharing). Added 10 new tests covering: escaped-regex search (literal '.*'), search by phone/email/message, status+search combined, page_size query param, legacy inquiries lacking status, legacy ObjectId serialization to string id with UTC created_at, status=new filter including legacy docs, Google allowlist config (includes nbngoc128@gmail.com), Google session mock 401 path, CORS preflight/simple allowed origin + rejected 'evil.example.com' + regression that wildcard is not returned. 31/31 pytest cases pass. Frontend Playwright confirmed: Contact iframe loads live Google Maps (content_frame reaches load), disclaimer present; admin inquiries pagination reads server page_size (22 seeded → Trang 1/2); filter-last-row page-decrement behaviour works exactly per updated logic (2 items on page2/filter=new → 1st mutation stays on page2 with 1 row, 2nd mutation on the sole remaining row triggers setPage back to Trang 1); empty state, list-500-error state, and update-500-error toast/banner all render their data-testids. Cleaned known leftover TEST_ inquiry IDs and all TEST_ seed data at start & end.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Contact /contact", "issues": ["Google Maps iframe pin uses ?q=address geocoding — pin accuracy for '389 Cù Chính Lan, Hoà Bình, Phú Thọ' is not empirically verified; disclaimer to owner is already shown."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_minhlam_regression.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Ingress/Cloudflare in front of the preview URL strips `access-control-allow-origin` on responses and returns 400 for cross-origin OPTIONS preflight at the edge. This is infra, not app — same-origin browser calls from the deployed frontend are unaffected. If any real cross-origin consumer is ever needed, revisit ingress CORS rules. CORS was therefore asserted against the local uvicorn (http://localhost:8001) where FastAPI CORSMiddleware actually applies; those assertions pass (allowed origin echoed, evil origin 400, no wildcard).",
+    "Owner (nbngoc128@gmail.com) still needs to complete a real Google OAuth consent end-to-end. Only allowlist config and invalid/mocked-401 negative paths were tested here.",
+    "Class-scoped fixture defined as an instance method is deprecated in pytest 10 (only for TestAdminProductAndUpload._cleanup). Non-blocking but worth converting to `@classmethod` in a future cleanup."
+  ],
+  "critical_code_review_comments": [
+    "AdminInquiries.tsx onSuccess still hard-codes the page-decrement heuristic to `items.length === 1 && page > 1`. Verified working, but note this depends on the returned page having only 1 remaining item at mutation time — race with concurrent inserts could momentarily deliver a stale page. Acceptable for single-admin workload.",
+    "server.py list_inquiries builds `$and: [{$or: [...]}]` for search alongside a top-level `$or` for the `new` status filter. The status branch does not itself use `$and`, so combining status=new + search works, but if a future maintainer switches status to use `$or` too, a bare merge would clobber; the code is fine today, just fragile.",
+    "test_credentials.md still references `admin@minhlamfurniture.vn` twice as the sole seed admin — matches env; no drift."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_minhlam_regression.py"
+  ],
+  "success_rate": {"backend": "100% (31/31 pytest)", "frontend": "100% of scripted flows (pagination, filter-last-row, empty/loading/list-error/update-error, iframe load)"},
+  "test_credentials": "admin@minhlamfurniture.vn / MinhLam@2026 (present in /app/memory/test_credentials.md and backend .env). Google allowlist: admin@minhlamfurniture.vn, nbngoc128@gmail.com. No live Google OAuth performed.",
+  "seed_data_creation": "22 TEST_UI_Pag_* inquiries were created via public /api/contact for pagination Playwright tests and 5 TEST_AI_* + 2 TEST_Legacy* inquiries were created via fixtures for backend pytest. Class-scoped teardown deletes each set; session autouse fixture double-purges all TEST_ inquiries and TEST_ products at start & end. Post-run DB verified clean: 0 TEST_ inquiries, 0 TEST_ products remaining. Known leftover IDs from iteration_1 (d1149079…, a52eb479…, 7c09a9f8…, 15420e00…, 0faf5439…) were deleted directly from Mongo.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression at /app/backend/tests/test_minhlam_regression.py now self-contained per class with pymongo teardown (no cross-class dep, safe under xdist --dist loadscope). Credentials come exclusively from /app/backend/.env via python-dotenv. Run with `BACKEND_URL=<REACT_APP_BACKEND_URL from frontend/.env> pytest tests/test_minhlam_regression.py -v`. IMPORTANT: CORS tests hit http://localhost:8001 directly (edge ingress/Cloudflare strips CORS headers and blocks cross-origin OPTIONS with 400 — that is preview-infra, not app). Contact page route is /contact (not /lien-he); Google Maps iframe uses address geocoding — do not assert lat/lng. Admin testids: `admin-inquiries-page`, `inquiries-search`, `inquiries-search-submit`, `inquiries-filter`, `inquiries-filter-{all|new|contacted|closed}`, `inquiries-next`, `inquiries-prev`, `inquiries-pagination`, `inquiries-total`, `inquiries-loading`, `inquiries-empty`, `inquiries-load-error`, `inquiries-retry`, `inquiries-update-error`, `inquiries-refresh`; per-row: `inquiry-row-{id}`, `inquiry-status-{id}`, `inquiry-status-{id}-{value}`. Filter dropdown option testids `inquiries-filter-contacted` overlap in text-content with row status option 'Đã liên hệ' — always use the scoped `inquiry-status-{id}-contacted` selector when clicking a row's status option.",
+  "rca of the issue": "No app bugs reproduced. Initial CORS test failure was infra-level (ingress rejects cross-origin OPTIONS with 400 and strips allow-origin header on responses); resolved by asserting CORS at the FastAPI process level (http://localhost:8001) which is where CORSMiddleware actually gates. Iteration_1's cross-class test fixture (`created_inquiry_ids` module-scoped shared across TestContactInquiry and TestAdminInquiries) was replaced with per-class self-contained seeds + Mongo teardown so loadscope splitting classes across xdist workers no longer breaks the suite."
+}
