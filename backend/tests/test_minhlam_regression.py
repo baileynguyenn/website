@@ -20,6 +20,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator, Optional
+from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
@@ -47,14 +48,9 @@ def mongo_db():
         c.close()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _purge_leftover_test_data(mongo_db):
-    """Belt-and-braces cleanup of any TEST_ leftovers from earlier iterations."""
-    mongo_db.inquiries.delete_many({"full_name": {"$regex": "^TEST_"}})
-    mongo_db.products.delete_many({"name": {"$regex": "^TEST_"}})
-    yield
-    mongo_db.inquiries.delete_many({"full_name": {"$regex": "^TEST_"}})
-    mongo_db.products.delete_many({"name": {"$regex": "^TEST_"}})
+# NOTE: Intentionally NO session-wide blanket "TEST_" purge. Every fixture below tears down
+# using the EXACT ids it created — so we never risk racing xdist workers or wiping unrelated
+# documents that happen to share a prefix.
 
 
 def _login(backend_url: str) -> httpx.Client:
@@ -147,18 +143,104 @@ class TestAuth:
         assert "nbngoc128@gmail.com" in emails
         assert ADMIN_EMAIL.lower() in emails
 
-    def test_google_session_denies_non_allowlisted_via_mock(self, monkeypatch, backend_url):
-        """MOCKED provider response — verifies allowlist rejection logic without live OAuth.
+    def test_google_session_denies_non_allowlisted_via_mock(self, monkeypatch):
+        """In-process unit test — imports the FastAPI handler directly, monkeypatches
+        `server.requests.get` and `server.db` so no live provider or Mongo is touched.
 
-        We cannot monkeypatch the running uvicorn process from here, so this test only asserts
-        the negative path an unauthorised session_id yields when the provider rejects it (401)
-        or the payload email is not on the allowlist (403). Since the live provider will 401
-        an unknown session, we just re-assert the 401 (documented mocked behaviour).
+        Verifies:
+          * Allowed owner (nbngoc128@gmail.com) → 200-shape response + secure cookie is set.
+          * Non-allowlisted email (test@example.invalid) → HTTPException 403 and NO writes to
+            google_users / user_sessions.
+
+        This test does NOT touch the real Mongo instance or the real Emergent OAuth provider.
+        The Response cookie is inspected via a real starlette.responses.Response instance.
         """
-        # A random session ID will not resolve at the provider → 401
-        with httpx.Client(base_url=f"{backend_url}/api", timeout=30.0) as c:
-            r = c.post("/auth/google/session", json={"session_id": f"mock_{uuid.uuid4().hex}"})
-            assert r.status_code == 401
+        import asyncio as _asyncio
+        import sys
+        from pathlib import Path as _Path
+        # Make backend/ importable so `import server` resolves to the app's server.py
+        _backend_dir = str(_Path(__file__).resolve().parents[1])
+        if _backend_dir not in sys.path:
+            sys.path.insert(0, _backend_dir)
+        import server  # type: ignore
+        from starlette.responses import Response as _Response
+
+        # ---------- helper: build a mocked provider `requests.get` return ----------
+        def _make_provider_response(email: str, name: str = "Owner"):
+            fake = MagicMock()
+            fake.raise_for_status = MagicMock(return_value=None)
+            fake.json = MagicMock(return_value={
+                "email": email,
+                "name": name,
+                "picture": "https://example.invalid/p.png",
+                "session_token": f"mocked_provider_token_{uuid.uuid4().hex}",
+            })
+            return fake
+
+        # ---------- Case 1: allowed owner ----------
+        owner_email = "nbngoc128@gmail.com"
+        assert owner_email in server.google_admin_emails(), (
+            "precondition: owner email must be in the allowlist env"
+        )
+
+        # Mock provider
+        def _mock_get_ok(url, headers=None, timeout=None):
+            return _make_provider_response(owner_email)
+        monkeypatch.setattr(server.requests, "get", _mock_get_ok)
+
+        # Mock db.google_users + db.user_sessions with AsyncMock — avoid real Mongo writes
+        mock_db = MagicMock()
+        mock_db.google_users.find_one = AsyncMock(return_value=None)
+        mock_db.google_users.insert_one = AsyncMock(return_value=None)
+        mock_db.user_sessions.delete_many = AsyncMock(return_value=None)
+        mock_db.user_sessions.insert_one = AsyncMock(return_value=None)
+        monkeypatch.setattr(server, "db", mock_db)
+
+        resp = _Response()
+        payload = server.GoogleSessionRequest(session_id="mocked_owner_session_id")
+        result = _asyncio.run(
+            server.google_session(payload, resp)
+        )
+        assert result["email"] == owner_email
+        # secure httponly cookie set
+        set_cookie_hdrs = [v for k, v in resp.raw_headers if k.lower() == b"set-cookie"]
+        joined = b"\n".join(set_cookie_hdrs).decode("latin-1").lower()
+        assert "session_token=" in joined
+        assert "httponly" in joined and "secure" in joined
+        # DB writes did occur for the allowed owner
+        mock_db.google_users.insert_one.assert_awaited()  # new user created
+        mock_db.user_sessions.insert_one.assert_awaited()
+
+        # ---------- Case 2: non-allowlisted email → 403, no DB writes, no cookie ----------
+        bad_email = "test@example.invalid"
+        assert bad_email not in server.google_admin_emails()
+
+        def _mock_get_bad(url, headers=None, timeout=None):
+            return _make_provider_response(bad_email)
+        monkeypatch.setattr(server.requests, "get", _mock_get_bad)
+
+        mock_db2 = MagicMock()
+        mock_db2.google_users.find_one = AsyncMock(return_value=None)
+        mock_db2.google_users.insert_one = AsyncMock(return_value=None)
+        mock_db2.user_sessions.delete_many = AsyncMock(return_value=None)
+        mock_db2.user_sessions.insert_one = AsyncMock(return_value=None)
+        monkeypatch.setattr(server, "db", mock_db2)
+
+        resp2 = _Response()
+        from fastapi import HTTPException as _HTTPException
+        with pytest.raises(_HTTPException) as excinfo:
+            _asyncio.run(
+                server.google_session(
+                    server.GoogleSessionRequest(session_id="mocked_bad_session_id"),
+                    resp2,
+                )
+            )
+        assert excinfo.value.status_code == 403
+        # no writes, no cookie
+        mock_db2.google_users.insert_one.assert_not_awaited()
+        mock_db2.user_sessions.insert_one.assert_not_awaited()
+        set_cookie_hdrs2 = [v for k, v in resp2.raw_headers if k.lower() == b"set-cookie"]
+        assert not set_cookie_hdrs2, f"unexpected cookie on 403: {set_cookie_hdrs2}"
 
 
 # ------------------------------------------------------------------ admin inquiries
@@ -276,60 +358,66 @@ class TestAdminInquiries:
 
 # ------------------------------------------------------------------ legacy / ObjectId
 class TestLegacyInquiryShapes:
-    """Legacy docs may (a) lack the `status` field entirely, (b) have Mongo ObjectId `_id`."""
+    """Real legacy inquiry shape: `_id` is an ObjectId AND a separate `id` UUID field exists,
+    `created_at` is a naive UTC datetime, and there is no `status` field.
+
+    (Earlier iterations invented an ObjectId-without-id shape that the app never actually
+    produced; that has been removed here.)
+    """
 
     @pytest.fixture(autouse=True)
-    def _seed(self, mongo_db, admin_client):
+    def _seed(self, mongo_db):
         self.oid = ObjectId()
-        legacy_no_status = {
+        self.uuid_id = str(uuid.uuid4())
+        legacy = {
             "_id": self.oid,
-            "full_name": "TEST_LegacyNoStatus",
+            "id": self.uuid_id,
+            "full_name": f"TEST_Legacy_{uuid.uuid4().hex[:6]}",
             "phone": "0977000000",
             "email": None,
             "category_interest": None,
             "message": None,
-            "created_at": datetime.now(timezone.utc),
-            # NOTE: no `status`, no `id`, ObjectId _id (pre-migration doc shape)
+            # naive UTC datetime (pre-tz-aware migration)
+            "created_at": datetime.now(timezone.utc).replace(tzinfo=None),
+            # NOTE: no `status` field
         }
-        self.uuid_id = str(uuid.uuid4())
-        legacy_no_status_uuid = {
-            "_id": self.uuid_id,
-            "id": self.uuid_id,
-            "full_name": "TEST_LegacyUuidNoStatus",
-            "phone": "0977000001",
-            "created_at": datetime.now(timezone.utc),
-        }
-        mongo_db.inquiries.insert_one(legacy_no_status)
-        mongo_db.inquiries.insert_one(legacy_no_status_uuid)
+        self.full_name = legacy["full_name"]
+        mongo_db.inquiries.insert_one(legacy)
         yield
+        # Teardown: exact _id only, never a prefix regex
         mongo_db.inquiries.delete_one({"_id": self.oid})
-        mongo_db.inquiries.delete_one({"_id": self.uuid_id})
 
-    def test_legacy_objectid_serializes_to_string_id(self, admin_client):
-        r = admin_client.get("/admin/inquiries", params={"search": "TEST_LegacyNoStatus"})
+    def test_legacy_returned_id_is_uuid_and_no_objectid_leaks(self, admin_client):
+        r = admin_client.get("/admin/inquiries", params={"search": self.full_name})
         assert r.status_code == 200
         items = r.json()["items"]
-        match = [i for i in items if i["full_name"] == "TEST_LegacyNoStatus"]
+        match = [i for i in items if i["full_name"] == self.full_name]
         assert match, items
         item = match[0]
         assert "_id" not in item
-        assert isinstance(item["id"], str) and item["id"] == str(self.oid)
-        # legacy created_at must be tz-aware UTC iso when parsed back
+        # Returned id must be the UUID from the doc, NOT str(ObjectId)
+        assert item["id"] == self.uuid_id
+        assert item["id"] != str(self.oid)
+        # created_at serialised as ISO UTC (either 'Z' suffix or explicit +00:00)
         assert item["created_at"].endswith("Z") or "+00:00" in item["created_at"]
-        # default status filled in
+        # Missing status defaults to 'new' in the response
         assert item["status"] == "new"
 
-    def test_legacy_uuid_id_preserved(self, admin_client):
-        r = admin_client.get("/admin/inquiries", params={"search": "TEST_LegacyUuidNoStatus"})
-        assert r.status_code == 200
-        match = [i for i in r.json()["items"] if i["full_name"] == "TEST_LegacyUuidNoStatus"]
-        assert match and match[0]["id"] == self.uuid_id
-        assert match[0]["status"] == "new"
-
     def test_status_new_filter_includes_legacy_without_status(self, admin_client):
-        r = admin_client.get("/admin/inquiries", params={"status": "new", "search": "TEST_LegacyNoStatus"})
+        r = admin_client.get("/admin/inquiries", params={"status": "new", "search": self.full_name})
         assert r.status_code == 200
-        assert any(i["full_name"] == "TEST_LegacyNoStatus" for i in r.json()["items"])
+        assert any(i["full_name"] == self.full_name for i in r.json()["items"])
+
+    def test_patch_can_update_legacy_inquiry_status(self, admin_client):
+        r = admin_client.patch(f"/admin/inquiries/{self.uuid_id}", json={"status": "contacted"})
+        assert r.status_code == 200, r.text
+        assert r.json()["status"] == "contacted"
+        assert r.json()["id"] == self.uuid_id
+        r2 = admin_client.get("/admin/inquiries", params={"search": self.full_name})
+        assert any(
+            i["id"] == self.uuid_id and i["status"] == "contacted"
+            for i in r2.json()["items"]
+        )
 
 
 # ------------------------------------------------------------------ CORS
@@ -387,10 +475,19 @@ class TestCORS:
 class TestAdminProductAndUpload:
     _product_id: Optional[str] = None
 
+    @staticmethod
     @pytest.fixture(autouse=True, scope="class")
-    def _cleanup(self, mongo_db):
+    def _cleanup(request, mongo_db):
+        """Class-scoped teardown that deletes ONLY the exact product id captured by the
+        create test — never a prefix regex. Runs even when assertions fail because it lives
+        in a `yield`+finalizer style. Declared as @staticmethod so pytest does not bind it to
+        an instance (which is deprecated for scope='class').
+        """
         yield
-        mongo_db.products.delete_many({"name": {"$regex": "^TEST_"}})
+        pid = TestAdminProductAndUpload._product_id
+        if pid:
+            mongo_db.products.delete_one({"id": pid})
+            TestAdminProductAndUpload._product_id = None
 
     def test_upload_and_create_product(self, admin_client):
         png_bytes = bytes.fromhex(
@@ -414,8 +511,9 @@ class TestAdminProductAndUpload:
         r = admin_client.post("/admin/products", json=payload)
         assert r.status_code == 201, r.text
         p = r.json()
-        assert p["images"] == [upload["url"]] and p["price_display"].endswith("₫")
+        # Capture id IMMEDIATELY so class teardown can delete it even if later assertions fail
         TestAdminProductAndUpload._product_id = p["id"]
+        assert p["images"] == [upload["url"]] and p["price_display"].endswith("₫")
         pub = admin_client.get(f"/products/{p['id']}")
         assert pub.status_code == 200
 
@@ -425,6 +523,8 @@ class TestAdminProductAndUpload:
         r = admin_client.delete(f"/admin/products/{pid}")
         assert r.status_code == 204
         assert admin_client.get(f"/products/{pid}").status_code == 404
+        # Product already deleted through the API — clear id so class teardown is a no-op
+        TestAdminProductAndUpload._product_id = None
 
     def test_admin_endpoints_require_auth(self, client):
         assert client.post("/admin/products", json={"name": "x", "category": "y", "price": 0}).status_code == 401

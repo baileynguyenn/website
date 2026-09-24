@@ -1,0 +1,34 @@
+{
+  "summary": "Iteration 3 — test-code corrections only, no app changes. Applied 4 review corrections to /app/backend/tests/test_minhlam_regression.py: (1) Removed session-autouse `_purge_leftover_test_data` that blanket-deleted any doc whose full_name/name started with 'TEST_' — replaced with a comment; every fixture now tears down ONLY the exact _id/id it created (no prefix regex anywhere). Product cleanup also uses the captured product id, never `{name: {$regex: ^TEST_}}`. (2) Converted the class-scoped instance fixture `TestAdminProductAndUpload._cleanup` to `@staticmethod` + `@pytest.fixture(scope='class')`, removing the pytest deprecation warning about instance-scoped class fixtures; teardown still runs even on failed assertions (yield+finalizer) and captures product id BEFORE later assertions. (3) Rewrote `test_google_session_denies_non_allowlisted_via_mock` into a genuine in-process unit test that imports `server` and monkeypatches `server.requests.get` (returning a MagicMock provider payload) and `server.db` (AsyncMock google_users/user_sessions). Case A: nbngoc128@gmail.com owner → 200 dict + Set-Cookie session_token flagged HttpOnly+Secure + google_users.insert_one & user_sessions.insert_one awaited. Case B: test@example.invalid → HTTPException 403, no DB inserts, no Set-Cookie. No live provider or real Mongo is touched — mocks are strictly in-process monkeypatch scope. (4) Replaced fabricated legacy schema (ObjectId _id without `id` field) with the real historical shape: `_id=ObjectId AND id=UUID`, `created_at=datetime.utcnow()` (naive UTC), no `status` field. New assertions: returned `id` retains the UUID (NOT str(ObjectId)), `status=new` filter includes the legacy doc, PATCH /admin/inquiries/{uuid} can update its status. Ran the full suite under configured xdist (-n 2 --dist loadscope): 31/31 passed in 6.56s. Post-run Mongo verified: 0 TEST_ inquiries, 0 TEST_ products. Frontend results from iteration_2 preserved as-is per request (upload flow already covered in backend suite; no frontend re-run).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Contact /contact", "issues": ["(carried from iteration_2) Google Maps iframe uses ?q=address geocoding — pin accuracy for '389 Cù Chính Lan, Hoà Bình, Phú Thọ' remains unverified; owner-facing disclaimer already shown. No frontend re-test performed this iteration."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_minhlam_regression.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "None blocking. Owner still needs to complete a live Google OAuth consent end-to-end for nbngoc128@gmail.com; only allowlist config, the invalid-session 401 path, and the mocked-in-process 200/403 branches are automated."
+  ],
+  "critical_code_review_comments": [
+    "In-process unit test creates `asyncio.new_event_loop()` per call and does not close it — negligible resource leak in a short-lived test process but could be tidied with `loop.close()` in a try/finally if reused elsewhere.",
+    "The @staticmethod + @pytest.fixture(scope='class') pattern is the cleanest way to keep autouse class-scoped teardown without pytest's instance-fixture deprecation; alternative would be moving the fixture to module scope but that spreads teardown further from the test class.",
+    "server.google_session mutates state in this order: allowlist check → find/insert google_user → delete/insert user_sessions → set_cookie. The mocked 403 case correctly asserts none of those side effects happen, which is the important behavioural contract."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_minhlam_regression.py"
+  ],
+  "success_rate": {"backend": "100% (31/31 pytest under -n 2 --dist loadscope)", "frontend": "Preserved from iteration_2 (no re-run this iteration per request)"},
+  "test_credentials": "admin@minhlamfurniture.vn / MinhLam@2026 (backend/.env + /app/memory/test_credentials.md). Google allowlist env: admin@minhlamfurniture.vn, nbngoc128@gmail.com. No live Google OAuth performed; mock uses in-process monkeypatch only.",
+  "seed_data_creation": "Per-class fixtures create: 3 TEST_AI_* inquiries via public /api/contact (TestAdminInquiries), 1 TEST_Legacy_* inquiry inserted directly via pymongo with _id=ObjectId+id=UUID (TestLegacyInquiryShapes), 1 TEST_Ghế_* product via /api/admin/products (TestAdminProductAndUpload). Each teardown deletes ONLY the exact _id/id captured at creation — no prefix regex, no cross-class shared IDs, safe under xdist loadscope. Post-run verified: 0 TEST_ inquiries and 0 TEST_ products remain.",
+  "final_verification": "Main-agent review replaced unclosed new_event_loop calls with asyncio.run and deprecated datetime.utcnow() with datetime.now(timezone.utc).replace(tzinfo=None) solely for legacy test fixtures. Entire configured xdist suite rerun after these changes: 31 passed in 6.48s. Application code unchanged; frontend success from iteration_2 remains valid.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Run: `BACKEND_URL=<REACT_APP_BACKEND_URL from frontend/.env> pytest /app/backend/tests/test_minhlam_regression.py -v` (pytest.ini forces `-n 2 --dist loadscope`). Every fixture uses exact-id teardown; do not reintroduce prefix-regex deletes. Google session unit test imports the `server` module in-process and monkeypatches `server.requests.get` + `server.db` — it neither hits the live provider nor writes to real Mongo. Legacy inquiry fixture is the app's real historical shape (_id=ObjectId, id=UUID, naive UTC created_at, no status). CORS tests still target http://localhost:8001 because the preview edge strips CORS headers (documented in iteration_2). Contact page route is /contact. Frontend testids from iteration_2 remain valid; upload flow is covered in backend suite.",
+  "rca of the issue": "Not a bug — a review-driven test-hygiene pass. Prior test file had (a) an unsafe session-autouse blanket `TEST_`-prefix delete that could race xdist workers and wipe unrelated docs, (b) a class-scoped instance fixture that pytest 10 deprecates, (c) a test named `_via_mock` that mocked nothing and just re-asserted the same 401 as the existing `test_google_session_invalid`, giving false coverage confidence for the 403 allowlist branch, and (d) an invented legacy shape (ObjectId `_id` with no `id` field) that the app never wrote. All four are now corrected; the suite passes 31/31 with configured xdist parallelism and leaves the DB clean of TEST_ documents."
+}
