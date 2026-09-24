@@ -56,6 +56,10 @@ Website catalog tiếng Việt cho cửa hàng nội thất Minh Lâm: tối gi�
 - Build TypeScript/Vite đạt; 4 cảnh báo fast-refresh có sẵn và cảnh báo bundle size không ảnh hưởng luồng đã kiểm thử. Không tái cấu trúc ngoài model yêu cầu mới.
 - Xác minh cuối sau review test: dùng asyncio.run để đóng event loop và tạo datetime UTC legacy không dùng API deprecated; chạy lại toàn bộ suite, 31/31 đạt trong 6.48 giây. Không đổi code ứng dụng sau kiểm thử giao diện thành công.
 
+## Chỉnh nội dung trang Liên hệ
+- Theo yêu cầu visual edit “change to ke cho chung toi nghe ve...”, đổi H1 thành “Kể cho chúng tôi nghe về không gian của bạn”. Giữ nguyên kiểu chữ, màu và bố cục; thêm data-testid contact-heading.
+- Kiểm tra trực tiếp bằng trình duyệt: đúng nội dung H1, hiển thị tiếng Việt bình thường trên /contact. Không thay backend hoặc luồng form.
+
 ### Hướng nâng cấp (chưa triển khai)
 - Ghi chú cuộc gọi theo từng yêu cầu để lưu nhu cầu, ngân sách, kết quả tư vấn.
 - Lịch nhắc gọi lại để hạn chế bỏ sót khách chưa chốt đơn.
