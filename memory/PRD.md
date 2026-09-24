@@ -60,6 +60,13 @@ Website catalog tiếng Việt cho cửa hàng nội thất Minh Lâm: tối gi�
 - Theo yêu cầu visual edit “change to ke cho chung toi nghe ve...”, đổi H1 thành “Kể cho chúng tôi nghe về không gian của bạn”. Giữ nguyên kiểu chữ, màu và bố cục; thêm data-testid contact-heading.
 - Kiểm tra trực tiếp bằng trình duyệt: đúng nội dung H1, hiển thị tiếng Việt bình thường trên /contact. Không thay backend hoặc luồng form.
 
+## Đồng bộ cách xưng hô trên các trang
+- Yêu cầu: “change all the place in the pages that use Minh Lam as a noun in a sentence to chung toi”. Người dùng chọn phương án a: đổi câu văn sang “chúng tôi”/“Chúng tôi”, giữ tên thương hiệu trong logo, tên trang, tiêu đề thương hiệu, địa chỉ, email/định danh và lời chào Zalo “Xin chào Minh Lâm”.
+- Đã đổi câu văn ở Home, About (giới thiệu/timeline/giá trị/lời mời showroom), Catalog (trạng thái không có kết quả), Contact (mô tả form/toast/tiêu đề chỉ đường), Privacy, Terms, AdminLogin và meta descriptions. Tiêu đề dạng câu “Ba điều chúng tôi không bao giờ thỏa hiệp” dùng cách xưng hô mới; nhãn “Về Minh Lâm”, “Showroom Minh Lâm”, “Câu chuyện Minh Lâm” vẫn giữ thương hiệu.
+- Đồng bộ 5 mô tả sản phẩm hp-dc01..hp-dc04 và hp-wp01 trong catalog_data.py, fallback data.ts và MongoDB thật. Chỉ thay 2 cụm từ trong trường description bằng $replaceAll; không reseed, không đổi giá/ảnh/mã/tên sản phẩm hay dữ liệu khách.
+- Không sửa API/logic auth, không thêm tích hợp. Build đạt, smoke trang About đạt. Kiểm thử giao diện trên các trang, chi tiết sản phẩm thật, nội dung meta, lời chào Zalo giữ nguyên và Contact success toast đều đạt — report iteration_4.json.
+- Kiểm tra thêm phát hiện nghi vấn không lưu form của báo cáo ban đầu: xác nhận bản ghi TEST_regression có trong DB_NAME=app với full_name đúng; đã dọn duy nhất ID bản ghi test. Không có lỗi lưu yêu cầu tư vấn. Không thay đổi thông tin đăng nhập.
+
 ### Hướng nâng cấp (chưa triển khai)
 - Ghi chú cuộc gọi theo từng yêu cầu để lưu nhu cầu, ngân sách, kết quả tư vấn.
 - Lịch nhắc gọi lại để hạn chế bỏ sót khách chưa chốt đơn.

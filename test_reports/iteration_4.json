@@ -1,0 +1,35 @@
+{
+  "summary": "Focused text-only regression for Minh Lâm → chúng tôi replacement. Verified rendered copy on Home, About, Contact, Catalog empty, Privacy, Terms, AdminLogin, product detail (hp-dc01..04, hp-wp01), index.html meta, Zalo greeting and Contact submission success toast on live preview URL. All required narrative replacements are present; permitted brand references (logo, footer copyright, document titles/keywords, headings 'Về Minh Lâm', 'Câu chuyện Minh Lâm', 'Showroom Minh Lâm', Zalo greeting 'Xin chào Minh Lâm', alt labels) preserved as intended. No layout overflow observed at 1920x1080.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verifications": {
+    "home_/": "narrative 'chúng tôi' present; title branded",
+    "about_/about": "'Ba điều chúng tôi không bao giờ thỏa hiệp', 'showroom của chúng tôi', 'Chúng tôi là đại lý' all rendered; brand heading 'Về Minh Lâm' preserved",
+    "contact_/contact": "H1 'Kể cho chúng tôi nghe về không gian của bạn' and map heading 'Tìm đường đến showroom của chúng tôi' rendered; form description 'Để lại thông tin, chúng tôi gọi lại tư vấn & báo giá miễn phí.' present",
+    "contact_submit_toast": "Rendered exact text 'Chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ làm việc.' after submitting TEST_regression inquiry",
+    "catalog_/catalog": "loads; branded title 'Bộ Sưu Tập | Nội Thất Minh Lâm'",
+    "privacy_/privacy": "'Chúng tôi tôn trọng…', 'chúng tôi thu thập' rendered",
+    "terms_/terms": "'của chúng tôi' rendered across sections",
+    "admin_login_/admin/login": "'Khu vực dành cho quản trị viên của chúng tôi …' rendered",
+    "product_hp-dc01..04": "Description starts with 'Phụ kiện tuyển chọn tại cửa hàng của chúng tôi.' (verified via public /api/products and rendered page)",
+    "product_hp-wp01": "Description contains 'đội ngũ của chúng tôi' (verified via public /api/products and rendered page)",
+    "zalo_greeting": "All product Zalo links use text prefix 'Xin chào Minh Lâm, tôi muốn tư vấn…' (URL-encoded, verified via anchor href scan)",
+    "meta": "index.html + rendered: meta description starts 'Chúng tôi là đại lý…'; og:description uses 'đồ gỗ tự nhiên của chúng tôi.'; og:title & <title> retain 'Nội Thất Minh Lâm' brand; keywords still include 'Minh Lâm'",
+    "remaining_minhlam_refs_scan": "Only allowed branding surfaces show 'Minh Lâm': logo, footer copyright, page titles/keywords, brand-only headings, alt labels — no narrative leftovers found"
+  },
+  "test_report_links": ["/app/test_reports/iteration_4.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Main-agent follow-up: the Contact submission DID persist in the configured DB_NAME=app. Verified record id=b8b5b12f-2a3e-45e8-b52e-a5225d2f18fa, full_name=TEST_regression, created_at=2026-09-24T01:50:01.018Z using MONGO_URL/DB_NAME from backend/.env. No application persistence bug was reproduced. The exact tester-created record was subsequently deleted (deleted_count=1); all other records were preserved."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped per request)", "frontend": "100%"},
+  "seed_data_creation": "One Contact UI submission TEST_regression persisted as b8b5b12f-2a3e-45e8-b52e-a5225d2f18fa. Main agent verified it in DB_NAME=app and cleaned only that exact id after testing.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Text-only regression pass complete for iteration 4. Real routes are /about, /contact, /catalog, /catalog/:id, /privacy, /terms, /admin/login (NOT Vietnamese slugs). Contact form testids: contact-input-name/phone/email/message and contact-submit-button. Product detail Zalo greeting uses URL-encoded 'Xin chào Minh Lâm'. If verifying contact persistence, always load MONGO_URL and DB_NAME from backend/.env and query full_name, not name. Main-agent verification found and removed the persisted TEST_regression document; no Contact persistence issue remains."
+}
