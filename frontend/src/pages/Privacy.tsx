@@ -4,7 +4,7 @@ const SECTIONS: LegalSection[] = [
   {
     heading: "Thông tin chúng tôi thu thập",
     body: [
-      "Khi bạn gửi form tư vấn, nhắn Zalo hoặc gọi hotline, Nội Thất Minh Lâm có thể thu thập: họ tên, số điện thoại, địa chỉ email, không gian/sản phẩm bạn quan tâm và nội dung trao đổi.",
+      "Khi bạn gửi form tư vấn, nhắn Zalo hoặc gọi hotline, chúng tôi có thể thu thập: họ tên, số điện thoại, địa chỉ email, không gian/sản phẩm bạn quan tâm và nội dung trao đổi.",
       "Website không sử dụng cookie quảng cáo và không thu thập dữ liệu thanh toán — mọi giao dịch đặt hàng đều được xác nhận trực tiếp qua Zalo hoặc điện thoại.",
     ],
   },
@@ -42,7 +42,7 @@ export default function Privacy() {
     <LegalPage
       title="Chính Sách Bảo Mật"
       updated="01/07/2026"
-      intro="Nội Thất Minh Lâm tôn trọng và bảo vệ thông tin cá nhân của mọi khách hàng. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và lưu giữ dữ liệu khi bạn sử dụng website hoặc liên hệ tư vấn."
+      intro="Chúng tôi tôn trọng và bảo vệ thông tin cá nhân của mọi khách hàng. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và lưu giữ dữ liệu khi bạn sử dụng website hoặc liên hệ tư vấn."
       sections={SECTIONS}
     />
   );

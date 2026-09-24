@@ -291,8 +291,8 @@ export default function Home() {
             <h2 className="mt-4 font-heading text-2xl leading-snug tracking-tight text-ink sm:text-3xl lg:text-4xl">
               Đại lý Nội thất Hòa Phát đầu tiên tại Hoà Bình
             </h2>
-            <p className="mt-6 leading-relaxed text-ink-soft">
-              Từ showroom 389 Cù Chính Lan, Minh Lâm mang đến trọn bộ nội thất Hòa Phát
+            <p data-testid="home-story-description" className="mt-6 leading-relaxed text-ink-soft">
+              Từ showroom 389 Cù Chính Lan, chúng tôi mang đến trọn bộ nội thất Hòa Phát
               chính hãng cùng nhiều thương hiệu tuyển chọn khác — cho căn nhà của bạn,
               văn phòng làm việc và cả những công trình cơ quan lớn.
             </p>

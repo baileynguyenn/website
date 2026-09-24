@@ -29,7 +29,7 @@ export function LegalPage({
             <h1 className="mt-4 font-heading text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">
               {title}
             </h1>
-            <p className="mt-6 leading-relaxed text-ink-soft">{intro}</p>
+            <p data-testid="legal-intro" className="mt-6 leading-relaxed text-ink-soft">{intro}</p>
           </Reveal>
         </div>
       </section>
@@ -42,7 +42,7 @@ export function LegalPage({
               </h2>
               <div className="mt-4 space-y-3">
                 {s.body.map((p, j) => (
-                  <p key={j} className="leading-relaxed text-ink-soft">
+                  <p key={j} data-testid={`legal-section-${i}-paragraph-${j}`} className="leading-relaxed text-ink-soft">
                     {p}
                   </p>
                 ))}

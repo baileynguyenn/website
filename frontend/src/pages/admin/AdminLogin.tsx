@@ -44,8 +44,8 @@ export default function AdminLogin() {
           <Lock className="h-5 w-5 text-royal" />
           Đăng nhập quản trị
         </h1>
-        <p className="mt-2 text-sm text-ink-soft">
-          Khu vực dành cho quản trị viên Minh Lâm — quản lý sản phẩm & hình ảnh.
+        <p data-testid="admin-login-description" className="mt-2 text-sm text-ink-soft">
+          Khu vực dành cho quản trị viên của chúng tôi — quản lý sản phẩm & hình ảnh.
         </p>
 
         <form onSubmit={submit} data-testid="admin-login-form" className="mt-8 space-y-5">

@@ -47,7 +47,7 @@ export default function Contact() {
     mutationFn: (body: InquiryPayload) => apiPost<Inquiry>("/contact", body),
     onSuccess: () => {
       toast.success("Đã gửi yêu cầu tư vấn", {
-        description: "Minh Lâm sẽ liên hệ với bạn trong vòng 24 giờ làm việc.",
+        description: "Chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ làm việc.",
       });
       setFullName("");
       setPhone("");
@@ -163,7 +163,9 @@ export default function Contact() {
             </div>
             <div className="mt-8 overflow-hidden rounded-3xl border border-line bg-card" data-testid="showroom-map-section">
               <div className="border-b border-line px-6 py-5">
-                <h2 className="font-heading text-base text-ink sm:text-lg" data-testid="showroom-map-heading">Tìm đường đến Minh Lâm</h2>
+                <h2 className="font-heading text-base text-ink sm:text-lg" data-testid="showroom-map-heading">
+                  Tìm đường đến showroom của chúng tôi
+                </h2>
                 <p className="mt-2 text-sm text-ink-soft" data-testid="showroom-map-address">{SHOWROOMS[0].address}</p>
               </div>
               <iframe
@@ -199,8 +201,8 @@ export default function Contact() {
               className="rounded-[2rem] border border-line bg-card p-6 shadow-[0_24px_60px_-32px_rgba(35,27,21,0.25)] sm:p-10"
             >
               <h2 className="font-heading text-2xl text-ink">Gửi yêu cầu tư vấn</h2>
-              <p className="mt-2 text-sm text-ink-soft">
-                Để lại thông tin, Minh Lâm gọi lại tư vấn & báo giá miễn phí.
+              <p data-testid="contact-form-description" className="mt-2 text-sm text-ink-soft">
+                Để lại thông tin, chúng tôi gọi lại tư vấn & báo giá miễn phí.
               </p>
 
               <div className="mt-8 space-y-6">

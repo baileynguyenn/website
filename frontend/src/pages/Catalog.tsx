@@ -159,8 +159,8 @@ export default function Catalog() {
                 <PackageSearch className="h-7 w-7 text-clay" />
               </span>
               <p className="font-heading text-xl text-ink">Không tìm thấy sản phẩm phù hợp</p>
-              <p className="max-w-sm text-sm text-ink-soft">
-                Thử từ khoá khác hoặc nhắn Zalo — Minh Lâm nhận đóng theo yêu cầu riêng.
+              <p data-testid="catalog-empty-description" className="max-w-sm text-sm text-ink-soft">
+                Thử từ khoá khác hoặc nhắn Zalo — chúng tôi nhận đóng theo yêu cầu riêng.
               </p>
               <button
                 onClick={() => {

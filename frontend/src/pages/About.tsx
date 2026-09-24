@@ -7,7 +7,7 @@ import { Marquee } from "@/components/Marquee";
 import { useTitle } from "@/hooks/useTitle";
 
 const TIMELINE = [
-  { year: "Khởi đầu", title: "Showroom 389 Cù Chính Lan", desc: "Nội Thất Minh Lâm mở cửa tại trung tâm phường Hoà Bình, phục vụ nội thất gia đình." },
+  { year: "Khởi đầu", title: "Showroom 389 Cù Chính Lan", desc: "Chúng tôi mở cửa tại trung tâm phường Hoà Bình, phục vụ nội thất gia đình." },
   { year: "Số 1", title: "Đại lý Hòa Phát đầu tiên", desc: "Trở thành đại lý Nội thất Hòa Phát đầu tiên tại Hoà Bình — hàng chính hãng, giá niêm yết." },
   { year: "Mở rộng", title: "Văn phòng & cơ quan", desc: "Cung cấp trọn gói nội thất cho doanh nghiệp, trường học và công trình cơ quan trong tỉnh." },
   { year: "Hôm nay", title: "Đồng hành mọi không gian", desc: "Từ phòng khách gia đình đến hội trường lớn — tư vấn, giao hàng, lắp đặt và hậu mãi tận tâm." },
@@ -15,8 +15,8 @@ const TIMELINE = [
 
 const VALUES = [
   { icon: ShieldCheck, title: "Chính hãng 100%", desc: "Mọi sản phẩm Hòa Phát đều có tem phiếu và bảo hành hãng — nói không với hàng trôi nổi." },
-  { icon: Sofa, title: "Đủ mọi không gian", desc: "Nội thất gia đình, văn phòng, công trình cơ quan — Minh Lâm tư vấn trọn gói từ A đến Z." },
-  { icon: HeartHandshake, title: "Tận tâm đồng hành", desc: "Giao lắp tận nơi, hậu mãi chu đáo. Một tin nhắn Zalo là đội ngũ Minh Lâm có mặt." },
+  { icon: Sofa, title: "Đủ mọi không gian", desc: "Nội thất gia đình, văn phòng, công trình cơ quan — chúng tôi tư vấn trọn gói từ A đến Z." },
+  { icon: HeartHandshake, title: "Tận tâm đồng hành", desc: "Giao lắp tận nơi, hậu mãi chu đáo. Một tin nhắn Zalo là đội ngũ của chúng tôi có mặt." },
 ];
 
 export default function About() {
@@ -40,9 +40,10 @@ export default function About() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.5 }}
+          data-testid="about-intro"
           className="mt-8 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg"
         >
-          Nội Thất Minh Lâm là đại lý Nội thất Hòa Phát đầu tiên tại Hoà Bình,
+          Chúng tôi là đại lý Nội thất Hòa Phát đầu tiên tại Hoà Bình,
           đồng thời cung cấp nhiều thương hiệu nội thất tuyển chọn khác. Từ showroom
           389 Cù Chính Lan, chúng tôi đồng hành cùng hàng nghìn gia đình, văn phòng
           và cơ quan trên khắp tỉnh Phú Thọ — với một tiêu chí duy nhất: hàng thật,
@@ -82,7 +83,7 @@ export default function About() {
                 <div className="h-full rounded-3xl border border-line bg-card p-7 transition-[transform,box-shadow] duration-500 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-20px_rgba(35,27,21,0.25)]">
                   <p className="font-heading text-4xl font-semibold text-clay">{t.year}</p>
                   <h3 className="mt-4 font-heading text-lg text-ink">{t.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{t.desc}</p>
+                  <p data-testid={`about-timeline-description-${i}`} className="mt-2 text-sm leading-relaxed text-ink-soft">{t.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -94,8 +95,8 @@ export default function About() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-clay">Giá trị cốt lõi</p>
-            <h2 className="mt-4 max-w-xl font-heading text-2xl tracking-tight text-ink sm:text-3xl lg:text-4xl">
-              Ba điều Minh Lâm không bao giờ thỏa hiệp
+            <h2 data-testid="about-values-heading" className="mt-4 max-w-xl font-heading text-2xl tracking-tight text-ink sm:text-3xl lg:text-4xl">
+              Ba điều chúng tôi không bao giờ thỏa hiệp
             </h2>
           </Reveal>
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3" data-testid="about-values">
@@ -106,7 +107,7 @@ export default function About() {
                     <v.icon className="h-6 w-6 text-clay" />
                   </span>
                   <h3 className="mt-6 font-heading text-xl text-ink">{v.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">{v.desc}</p>
+                  <p data-testid={`about-value-description-${i}`} className="mt-3 text-sm leading-relaxed text-ink-soft">{v.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -121,8 +122,8 @@ export default function About() {
               <h2 className="font-heading text-2xl leading-snug tracking-tight text-cream sm:text-3xl lg:text-4xl">
                 Muốn xem hàng thật, chạm tận tay?
               </h2>
-              <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream/70 sm:text-base">
-                Mời bạn ghé showroom Minh Lâm tại 389 Cù Chính Lan, phường Hoà Bình —
+              <p data-testid="about-showroom-invitation" className="mt-3 max-w-lg text-sm leading-relaxed text-cream/70 sm:text-base">
+                Mời bạn ghé showroom của chúng tôi tại 389 Cù Chính Lan, phường Hoà Bình —
                 đội ngũ tư vấn luôn sẵn sàng pha một ấm trà và trò chuyện cùng bạn.
               </p>
             </div>
