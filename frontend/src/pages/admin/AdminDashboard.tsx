@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ImagePlus, Loader2, LogOut, Pencil, Plus, Search, Trash2, X } from "lucide-react";
@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Logo } from "@/components/Logo";
 import { useTitle } from "@/hooks/useTitle";
+import AdminInquiries from "./AdminInquiries";
 
 const EMPTY: ProductInput = {
   name: "",
@@ -37,7 +38,8 @@ const EMPTY: ProductInput = {
 };
 
 export default function AdminDashboard() {
-  useTitle("Quản trị sản phẩm | Nội Thất Minh Lâm");
+  const isInquiries = useLocation().pathname === "/admin/inquiries";
+  useTitle(`${isInquiries ? "Yêu cầu tư vấn" : "Quản trị sản phẩm"} | Nội Thất Minh Lâm`);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [authed, setAuthed] = useState(false);
@@ -156,7 +158,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-panel">
       <header className="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/" aria-label="Về trang chủ"><Logo /></Link>
+          <Link to="/" aria-label="Về trang chủ" data-testid="admin-home-link"><Logo /></Link>
           <div className="flex items-center gap-3">
             <Link
               to="/catalog"
@@ -178,6 +180,14 @@ export default function AdminDashboard() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" data-testid="admin-dashboard">
+        <nav className="mb-8 flex gap-2 border-b border-line pb-4" aria-label="Quản trị" data-testid="admin-navigation">
+          {[{ to: "/admin", label: "Sản phẩm", id: "products" }, { to: "/admin/inquiries", label: "Yêu cầu tư vấn", id: "inquiries" }].map((item) => (
+            <NavLink key={item.id} to={item.to} end data-testid={`admin-nav-${item.id}`} className={({ isActive }) => `rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${isActive ? "bg-royal text-white" : "text-ink-soft hover:bg-ribbon hover:text-royal"}`}>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+        {isInquiries ? <AdminInquiries /> : <>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="font-heading text-2xl text-ink sm:text-3xl">Quản lý sản phẩm</h1>
@@ -274,6 +284,7 @@ export default function AdminDashboard() {
             </tbody>
           </table>
         </div>
+        </>}
       </main>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -424,7 +435,7 @@ export default function AdminDashboard() {
                   />
                 </label>
               </div>
-              <p className="text-xs text-ink-soft">Ảnh đầu tiên là ảnh đại diện. Tối đa 8MB/ảnh.</p>
+              <p className="text-xs leading-relaxed text-ink-soft" data-testid="product-image-help">Ảnh đầu tiên là ảnh đại diện. Tối đa 8MB/ảnh. Để thay ảnh mẫu: tải ảnh thật, xoá ảnh mẫu bằng nút × trên từng ảnh rồi bấm Lưu thay đổi.</p>
             </div>
 
             <label className="flex items-center gap-3" htmlFor="pf-featured">

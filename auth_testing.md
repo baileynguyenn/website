@@ -2,6 +2,14 @@
 
 Two auth methods: (1) email/password JWT httpOnly cookie `access_token` (12h); (2) Emergent-managed Google OAuth cookie `session_token` (7 days, allowlist via GOOGLE_ADMIN_EMAILS).
 
+## Current verification scope
+- Approved Google admin: nbngoc128@gmail.com (also retain existing admin@minhlamfurniture.vn).
+- Check allowlist parsing and access control using disposable sessions only; do not impersonate the owner or claim a live Google sign-in was completed.
+- Check browser Google redirect derives from current origin, invalid callback returns a friendly error, unauthenticated inquiries list/update are denied.
+- Any disposable Google test users/sessions must be cleaned after tests and recorded in test_credentials.md if retained.
+- Real Google account chooser/consent flow remains owner verification.
+- Use current REACT_APP_BACKEND_URL from frontend/.env for external API tests.
+
 ## Step 1: MongoDB verification
 ```
 mongosh

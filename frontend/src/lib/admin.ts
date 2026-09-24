@@ -1,3 +1,32 @@
+import { API_BASE, ApiError } from "@/lib/api";
+
+
+export type InquiryStatus = "new" | "contacted" | "closed";
+export interface AdminInquiry {
+  id: string;
+  full_name: string;
+  phone: string;
+  email?: string | null;
+  category_interest?: string | null;
+  message?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+  status: InquiryStatus;
+}
+export interface InquiryListResponse {
+  items: AdminInquiry[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+export const adminInquiries = (search: string, status: string, page: number) => {
+  const params = new URLSearchParams({ search, page: String(page), page_size: "20" });
+  if (status !== "all") params.set("status", status);
+  return req<InquiryListResponse>("GET", `/admin/inquiries?${params}`);
+};
+export const adminUpdateInquiry = (id: string, status: InquiryStatus) =>
+  req<AdminInquiry>("PATCH", `/admin/inquiries/${encodeURIComponent(id)}`, { status });
+
 // Admin API helpers — session rides the httpOnly access_token cookie (credentials: "include").
 export interface ProductInput {
   name: string;
@@ -13,7 +42,7 @@ export interface ProductInput {
 }
 
 async function req<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}${path}`, {
     method,
     credentials: "include",
     headers: body === undefined ? undefined : { "Content-Type": "application/json" },
@@ -27,7 +56,9 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
         : Array.isArray(err?.detail)
           ? err.detail.map((e: { msg?: string }) => e?.msg ?? "").filter(Boolean).join(" ")
           : null;
-    throw new Error(detail ?? `Yêu cầu thất bại (${res.status})`);
+    const error = new ApiError(res.status, err);
+    error.message = detail ?? `Yêu cầu thất bại (${res.status})`;
+    throw error;
   }
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;
@@ -49,7 +80,7 @@ export const adminDeleteProduct = (id: string) => req<void>("DELETE", `/admin/pr
 export async function adminUploadImage(file: File): Promise<string> {
   const fd = new FormData();
   fd.append("file", file);
-  const res = await fetch("/api/admin/upload", {
+  const res = await fetch(`${API_BASE}/admin/upload`, {
     method: "POST",
     credentials: "include",
     body: fd,

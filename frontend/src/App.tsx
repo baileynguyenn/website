@@ -58,6 +58,7 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/inquiries" element={<AdminDashboard />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>

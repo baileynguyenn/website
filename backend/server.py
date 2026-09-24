@@ -13,7 +13,7 @@ import bcrypt
 import jwt
 import requests
 from dotenv import load_dotenv
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, UploadFile, File, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, UploadFile, File, Depends, Query
 from pydantic import BaseModel, Field
 from pymongo import ReturnDocument
 from starlette.middleware.cors import CORSMiddleware
@@ -26,6 +26,9 @@ load_dotenv(ROOT_DIR / '.env')
 
 from lib.db import client, db, ensure_indexes
 from catalog_data import CATEGORIES
+from models.inquiry import (
+    ContactInquiryCreate, ContactInquiry, InquiryListResponse, InquiryStatus, InquiryStatusUpdate,
+)
 
 JWT_ALGORITHM = "HS256"
 TOKEN_MAX_AGE = 12 * 3600
@@ -201,19 +204,6 @@ class CategoryInfo(BaseModel):
     count: int = 0
 
 
-class ContactInquiryCreate(BaseModel):
-    full_name: str = Field(min_length=2, max_length=120)
-    phone: str = Field(min_length=8, max_length=20)
-    email: Optional[str] = Field(default=None, max_length=160)
-    category_interest: Optional[str] = Field(default=None, max_length=120)
-    message: Optional[str] = Field(default=None, max_length=2000)
-
-
-class ContactInquiry(ContactInquiryCreate):
-    id: str
-    created_at: datetime
-
-
 class LoginRequest(BaseModel):
     email: str
     password: str
@@ -282,12 +272,8 @@ async def get_product(product_id: str):
 
 @api_router.post("/contact", response_model=ContactInquiry, status_code=201)
 async def create_inquiry(payload: ContactInquiryCreate):
-    inquiry = ContactInquiry(
-        **payload.model_dump(),
-        id=str(uuid.uuid4()),
-        created_at=datetime.now(timezone.utc),
-    )
-    await db.inquiries.insert_one(inquiry.model_dump())
+    inquiry = ContactInquiry(**payload.model_dump())
+    await db.inquiries.insert_one(inquiry.to_mongo())
     return inquiry
 
 
@@ -398,6 +384,52 @@ async def logout(request: Request, response: Response):
 @api_router.get("/auth/me")
 async def auth_me(admin: dict = Depends(get_current_admin)):
     return admin
+
+
+# ---------- Admin inquiries ----------
+
+@api_router.get("/admin/inquiries", response_model=InquiryListResponse)
+async def list_inquiries(
+    response: Response,
+    admin: dict = Depends(get_current_admin),
+    status: Optional[InquiryStatus] = None,
+    search: str = Query(default="", max_length=120),
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=20, ge=1, le=100),
+):
+    response.headers["Cache-Control"] = "no-store"
+    query: dict = {}
+    if status == "new":
+        query["$or"] = [{"status": "new"}, {"status": {"$exists": False}}]
+    elif status:
+        query["status"] = status
+    if search.strip():
+        rx = {"$regex": re.escape(search.strip()), "$options": "i"}
+        query["$and"] = [{"$or": [{field: rx} for field in ("full_name", "phone", "email", "message")]}]
+    total = await db.inquiries.count_documents(query)
+    docs = await db.inquiries.find(query).sort([("created_at", -1), ("id", -1)]).skip(
+        (page - 1) * page_size
+    ).limit(page_size).to_list(page_size)
+    return InquiryListResponse(
+        items=[ContactInquiry.from_mongo(doc) for doc in docs],
+        total=total, page=page, page_size=page_size,
+    )
+
+
+@api_router.patch("/admin/inquiries/{inquiry_id}", response_model=ContactInquiry)
+async def update_inquiry_status(
+    inquiry_id: str, payload: InquiryStatusUpdate, response: Response,
+    admin: dict = Depends(get_current_admin),
+):
+    response.headers["Cache-Control"] = "no-store"
+    doc = await db.inquiries.find_one_and_update(
+        {"id": inquiry_id},
+        {"$set": {"status": payload.status, "updated_at": datetime.now(timezone.utc)}},
+        return_document=ReturnDocument.AFTER,
+    )
+    if not doc:
+        raise HTTPException(status_code=404, detail="Không tìm thấy yêu cầu tư vấn")
+    return ContactInquiry.from_mongo(doc)
 
 
 # ---------- Admin product management ----------

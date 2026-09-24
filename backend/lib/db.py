@@ -24,7 +24,11 @@ INDEXES: dict[str, list[IndexModel]] = {
         IndexModel([("category", ASCENDING), ("price", ASCENDING)], name="category_price"),
         IndexModel([("featured", ASCENDING), ("created_at", DESCENDING)], name="featured_created"),
     ],
-    "inquiries": [IndexModel([("created_at", DESCENDING)], name="created_at_desc")],
+    "inquiries": [
+        IndexModel([("created_at", DESCENDING)], name="created_at_desc"),
+        IndexModel([("id", ASCENDING)], name="inquiry_id", unique=True),
+        IndexModel([("status", ASCENDING), ("created_at", DESCENDING)], name="inquiry_status_created"),
+    ],
     "files": [IndexModel([("storage_path", ASCENDING)], name="storage_path", unique=True)],
     "admins": [IndexModel([("email", ASCENDING)], name="email", unique=True)],
     "google_users": [IndexModel([("email", ASCENDING)], name="email", unique=True)],

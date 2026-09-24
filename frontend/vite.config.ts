@@ -1,5 +1,5 @@
 import path from "node:path";
-import { defineConfig, type UserConfig } from "vite";
+import { defineConfig, loadEnv, type UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { visualEdits } from "@emergentbase/visual-edits/vite";
@@ -34,9 +34,15 @@ if (!hotReloadDisabled) {
 }
 
 // https://vite.dev/config/
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "REACT_APP_");
+  const requiredEnv = ["REACT_APP_BACKEND_URL", "REACT_APP_SHOWROOM_MAP_URL", "REACT_APP_SHOWROOM_DIRECTIONS_URL"];
+  for (const key of requiredEnv) {
+    if (!env[key]) throw new Error(`Missing environment variable: ${key}`);
+  }
   const emergentOverlay = await loadEmergentOverlay();
   return {
+    define: Object.fromEntries(requiredEnv.map((key) => [`process.env.${key}`, JSON.stringify(env[key])])),
     plugins: [
       react(),
       tailwindcss(),

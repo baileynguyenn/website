@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Clock, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import { Clock, Mail, MapPin, MessageCircle, Navigation, Phone, Send } from "lucide-react";
 import { apiPost } from "@/lib/api";
 import {
   CATEGORIES,
@@ -160,6 +160,35 @@ export default function Contact() {
               <p className="mt-5 text-xs leading-relaxed text-ink-soft">
                 Bãi đỗ xe miễn phí · Trà & cà phê mời khách · Khu trải nghiệm vật liệu gỗ thật.
               </p>
+            </div>
+            <div className="mt-8 overflow-hidden rounded-3xl border border-line bg-card" data-testid="showroom-map-section">
+              <div className="border-b border-line px-6 py-5">
+                <h2 className="font-heading text-base text-ink sm:text-lg" data-testid="showroom-map-heading">Tìm đường đến Minh Lâm</h2>
+                <p className="mt-2 text-sm text-ink-soft" data-testid="showroom-map-address">{SHOWROOMS[0].address}</p>
+              </div>
+              <iframe
+                title="Bản đồ showroom Minh Lâm — 389 Cù Chính Lan"
+                src={process.env.REACT_APP_SHOWROOM_MAP_URL}
+                className="block h-80 w-full border-0 sm:h-96"
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                data-testid="showroom-map-iframe"
+              />
+              <div className="space-y-4 p-6">
+                <a
+                  href={process.env.REACT_APP_SHOWROOM_DIRECTIONS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="showroom-directions-link"
+                  className="inline-flex items-center gap-2 rounded-full bg-royal px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-royal-deep"
+                >
+                  <Navigation className="h-4 w-4" /> Chỉ đường trên Google Maps
+                </a>
+                <p className="text-xs leading-relaxed text-ink-soft" data-testid="showroom-map-note">
+                  Bản đồ tìm theo địa chỉ, vị trí ghim có thể chưa chính xác. Nếu bản đồ không tải hoặc bạn cần hướng dẫn, hãy gọi {PHONE_DISPLAY}.
+                </p>
+              </div>
             </div>
           </Reveal>
 
