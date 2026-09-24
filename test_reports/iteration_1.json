@@ -1,0 +1,36 @@
+{
+  "summary": "Full backend + frontend regression for Minh Lâm batch (inquiries, admin auth, Google session, product upload, Contact map). 21/21 pytest cases pass against external preview URL. Frontend flows verified via Playwright: Contact form → admin login → /admin/inquiries with data appearing, search, status update+toast, filter, mobile responsive, logout redirects and re-auth is enforced.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Contact /contact", "issues": ["Google Maps iframe uses address-based ?q=... geocoding; pin accuracy of '389 Cù Chính Lan, Hoà Bình, Phú Thọ' is not empirically verified — disclaimer already shown to user, acceptable."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_minhlam_regression.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Owner (nbngoc128@gmail.com) still needs to complete a real Google sign-in end-to-end — only allowlist and invalid-session negative paths were tested here (no live OAuth consent performed).",
+    "Verify actual Google Maps pin at 389 Cù Chính Lan matches showroom in production; if wrong, switch REACT_APP_SHOWROOM_MAP_URL to a `!1m..!3d..!4d..` place-embed once lat/lng known."
+  ],
+  "critical_code_review_comments": [
+    "server.py get_current_admin: JWT decode failure silently falls through — acceptable, but logging jwt.PyJWTError at debug would speed future auth debugging.",
+    "AdminInquiries.tsx pages count is hard-coded to page_size=20 (Math.ceil(total/20)); if backend page_size changes it will desync. Read query.data.page_size instead.",
+    "AdminInquiries.tsx mutation onSuccess decrements page based on `status !== 'all'`, but the mutated inquiry may still match filter after update (e.g. new→contacted while filter=contacted); logic can prematurely paginate back. Minor UX edge case, not blocking.",
+    "server.py CORS `allow_origins=os.environ.get('CORS_ORIGINS', '*').split(',')` combined with `allow_credentials=True` is invalid per spec when origin is '*'; browsers will drop cookies. Currently .env has `CORS_ORIGINS=*`. Should be tightened to explicit https origin(s) for production correctness — cookies happen to work here because same-origin via ingress rewrite.",
+    "Contact.tsx uses `process.env.REACT_APP_SHOWROOM_MAP_URL` directly in JSX; if the env var is ever undefined the iframe src becomes 'undefined' silently. Add a fallback or invariant."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_minhlam_regression.py"
+  ],
+  "success_rate": {"backend": "100% (21/21)", "frontend": "100% of scripted flows"},
+  "test_credentials": "admin@minhlamfurniture.vn / MinhLam@2026 (present in /app/memory/test_credentials.md). Google allowlist includes nbngoc128@gmail.com; no owner credentials available for live OAuth.",
+  "seed_data_creation": "Created TEST_ prefixed inquiries via public POST /api/contact and closed them at end; created + deleted one TEST_ product with uploaded 1x1 PNG. TEST_ inquiries remain (no DELETE endpoint) but are marked closed and prefixed for future purge.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend test suite lives at /app/backend/tests/test_minhlam_regression.py. IMPORTANT: pytest.ini forces -n 2 --dist loadscope xdist workers; auth cookies are set with secure=True samesite=none so cookies only persist over https — run with `BACKEND_URL=<REACT_APP_BACKEND_URL> pytest -n 0` when doing serial debugging. Frontend routes: /contact (not /lien-he), admin nav testids: admin-nav-inquiries, admin-logout. Google Maps iframe uses address search (?q=…&output=embed) — do not assert exact geographic pin.",
+  "rca of the issue": "None; no bugs reproduced. Initial pytest run failed with 401s only because tests targeted http://localhost:8001 where secure cookies are dropped by httpx — switching BACKEND_URL to the external https preview URL resolved it."
+}

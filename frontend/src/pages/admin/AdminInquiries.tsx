@@ -65,8 +65,8 @@ export default function AdminInquiries() {
   });
   const mutation = useMutation({
     mutationFn: ({ id, value }: { id: string; value: InquiryStatus }) => adminUpdateInquiry(id, value),
-    onSuccess: async () => {
-      if (status !== "all" && query.data?.items.length === 1 && page > 1) setPage(page - 1);
+    onSuccess: async (updatedInquiry) => {
+      if (status !== "all" && updatedInquiry.status !== status && query.data?.items.length === 1 && page > 1) setPage(page - 1);
       await queryClient.invalidateQueries({ queryKey: ["admin-inquiries"] });
       toast.success("Đã cập nhật trạng thái tư vấn");
     },
@@ -79,7 +79,7 @@ export default function AdminInquiries() {
       navigate("/admin/login", { replace: true });
     }
   }, [authError, navigate, queryClient]);
-  const pages = Math.max(1, Math.ceil((query.data?.total ?? 0) / 20));
+  const pages = query.data ? Math.max(1, Math.ceil(query.data.total / query.data.page_size)) : 1;
 
   return (
     <section data-testid="admin-inquiries-page">
