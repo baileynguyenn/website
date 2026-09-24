@@ -1,0 +1,446 @@
+{
+  "project_name": "Minh Lâm Nội Thất (Minh Lam Furniture)",
+  "brand_identity": {
+    "name": "Nội Thất Minh Lâm",
+    "short_name": "Minh Lâm",
+    "tagline": "Kiến tạo không gian sống thuần khiết & ấm cúng",
+    "english_tagline": "Warm Minimalist Furniture & Living Spaces",
+    "narrative": "Minh Lâm là thương hiệu nội thất thủ công và tinh tuyển tại Việt Nam, mang triết lý giao thoa giữa Wabi-Sabi tinh tế và Japandi ấm áp. Chúng tôi chú trọng vật liệu gỗ tự nhiên bền vững, đường nét mềm mại và tinh thần tối giản tôn vinh chất lượng cuộc sống gia đình.",
+    "tone_of_voice": "Tinh tế, ấm áp, nhã nhặn, chân thành và đáng tin cậy. Văn phong tiếng Việt tự nhiên, gãy gọn, giàu tính thẩm mỹ kiến trúc.",
+    "logo_spec": {
+      "svg_concept": "Monogram 'ML' cách điệu theo dạng khớp mộng gỗ truyền thống và đường cong ghế bành tối giản, bao quanh bởi hình elip mảnh.",
+      "favicon_description": "Biểu tượng chữ M lồng L hình vân gỗ tối giản trên nền be ấm #F5F0E8 với nét vẽ nâu mộc #2C221E."
+    }
+  },
+  "colors": {
+    "palette_name": "Warm Natural Wood & Japandi Earth",
+    "accent": "#9E5A38",
+    "on_accent": "#FFFFFF",
+    "surfaces": [
+      {
+        "name": "page",
+        "kind": "solid",
+        "bg": "#FAF7F2",
+        "on_bg": "#231B15",
+        "on_bg_muted": "#5C5248",
+        "roles": {
+          "link": "#9E5A38",
+          "error": "#9C2A2A",
+          "success": "#2D5A3C"
+        }
+      },
+      {
+        "name": "panel",
+        "kind": "solid",
+        "bg": "#F3EDE2",
+        "on_bg": "#231B15",
+        "on_bg_muted": "#63584E",
+        "roles": {
+          "link": "#9E5A38",
+          "error": "#9C2A2A",
+          "success": "#2D5A3C"
+        }
+      },
+      {
+        "name": "card",
+        "kind": "solid",
+        "bg": "#FFFFFF",
+        "on_bg": "#231B15",
+        "on_bg_muted": "#665C52",
+        "roles": {
+          "link": "#9E5A38",
+          "error": "#9C2A2A",
+          "success": "#2D5A3C"
+        }
+      },
+      {
+        "name": "inverse",
+        "kind": "solid",
+        "bg": "#231B15",
+        "on_bg": "#F5F0E8",
+        "on_bg_muted": "#C2B6A6",
+        "roles": {
+          "link": "#E4A77D",
+          "error": "#F87171",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "hero",
+        "kind": "image",
+        "contrast_against": "#18120E",
+        "guarantee": "scrim: linear-gradient(180deg, rgba(24,18,14,0.75) 0%, rgba(24,18,14,0.45) 60%, rgba(24,18,14,0.85) 100%)",
+        "on_bg": "#FAF7F2",
+        "on_bg_muted": "#E0D7CC",
+        "roles": {
+          "link": "#F2BD99",
+          "error": "#FCA5A5",
+          "success": "#86EFAC"
+        }
+      },
+      {
+        "name": "nav_glass",
+        "kind": "glass",
+        "contrast_against": "#F5F0E8",
+        "guarantee": "backdrop-blur-xl bg-[#FAF7F2]/85 backdrop-saturate-150 border-b border-[#E3D8C8]/60 shadow-[0_4px_24px_rgba(35,27,21,0.04)]",
+        "on_bg": "#231B15",
+        "on_bg_muted": "#5C5248",
+        "roles": {
+          "link": "#9E5A38",
+          "error": "#9C2A2A",
+          "success": "#2D5A3C"
+        }
+      },
+      {
+        "name": "zalo_cta_badge",
+        "kind": "solid",
+        "bg": "#0068FF",
+        "on_bg": "#FFFFFF",
+        "on_bg_muted": "#E0EFFF",
+        "roles": {
+          "link": "#FFFFFF",
+          "error": "#FFE4E6",
+          "success": "#DCFCE7"
+        }
+      },
+      {
+        "name": "editorial_ribbon",
+        "kind": "solid",
+        "bg": "#EAE3D5",
+        "on_bg": "#3B3026",
+        "on_bg_muted": "#6E6153",
+        "roles": {
+          "link": "#9E5A38",
+          "error": "#9C2A2A",
+          "success": "#2D5A3C"
+        }
+      }
+    ],
+    "wood_tokens": {
+      "oak_light": "#E8D8C4",
+      "teak_mid": "#C89D7C",
+      "terracotta": "#9E5A38",
+      "walnut_deep": "#4A3528",
+      "espresso_dark": "#231B15",
+      "linen_cream": "#FAF7F2",
+      "stone_sand": "#F0E8DC",
+      "border_subtle": "#E5DC CE"
+    }
+  },
+  "typography": {
+    "font_heading": "'Lora Variable', Georgia, serif",
+    "font_body": "'Plus Jakarta Sans Variable', 'DM Sans Variable', sans-serif",
+    "font_mono": "'Geist Mono Variable', monospace",
+    "css_import": "@import \"@fontsource-variable/lora\";\n@import \"@fontsource-variable/plus-jakarta-sans\";\n@import \"@fontsource-variable/geist-mono\";",
+    "scale_px": {
+      "display": 56,
+      "h1": 44,
+      "h2": 32,
+      "h3": 24,
+      "h4": 20,
+      "body": 16,
+      "caption": 14
+    },
+    "typesetting_rules": {
+      "hero_headline": "text-4xl sm:text-5xl lg:text-[3.5rem] leading-[1.1] tracking-tight font-serif text-[#FAF7F2]",
+      "section_headline": "text-2xl sm:text-3xl lg:text-4xl font-serif tracking-tight text-[#231B15]",
+      "sub_headline": "text-lg sm:text-xl font-medium text-[#5C5248] leading-relaxed",
+      "overline_label": "text-xs uppercase tracking-[0.25em] font-mono text-[#9E5A38] font-semibold",
+      "body_text": "text-base leading-relaxed text-[#231B15]",
+      "body_muted": "text-sm sm:text-base leading-relaxed text-[#5C5248]",
+      "price_tag": "font-serif text-lg sm:text-xl font-semibold text-[#9E5A38]"
+    }
+  },
+  "entry_surfaces": {
+    "/": "split hero with kinetic masked text reveal left, full-bleed framed Japandi living suite image right with wood-toned overlay badge",
+    "/catalog": "header filter banner over light stone surface, quick search input + dynamic pill filters, responsive 3-column product cards grid",
+    "/catalog/:id": "gallery split with sticky high-res imagery carousel left, purchase & Zalo consultation inquiry block right with material specifications",
+    "/about": "editorial storytelling layout with master craft photo, timeline milestone grid, and craft philosophy accordion",
+    "/contact": "split contact surface with showroom visit details & map placeholder left, interactive quotation/Zalo inquiry form right",
+    "/privacy": "clean single-column legal typography on warm paper container with sticky table of contents",
+    "/terms": "clean single-column legal typography on warm paper container with sticky table of contents"
+  },
+  "visual_enhancers": {
+    "smooth_scrolling": "lenis (smooth momentum scroll applied globally)",
+    "motion_engine": "motion/react (Framer Motion v11+ style scroll reveals, stagger containers, hover lifts)",
+    "marquee": "Slow editorial ribbon using react-fast-marquee or CSS kinetic marquee displaying brand philosophies: 'Gỗ Tự Nhiên Tuyển Chọn • Thủ Công Tỉ Mỉ • Thiết Kế Japandi Tinh Tế • Tư Vấn & Thi Công Tận Tâm • Bảo Hành 5 Năm'",
+    "hero_reveal": "Masked line-by-line kinetic reveal: lines wrapped in overflow-hidden spans, translating Y from 100% to 0% with cubic-bezier(0.16, 1, 0.3, 1)",
+    "textures": "Subtle organic paper noise overlay (SVG filter with feTurbulence, opacity 0.035) for authentic craft feel",
+    "spotlight_card": "Product cards with subtle 1px border (#E5DCCE), soft ambient hover lift (-translate-y-1.5), and radial warm spotlight shimmer on hover"
+  },
+  "layout_and_grids": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "hero_grid": "grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[85vh] pt-28 pb-16",
+    "categories_bento": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6",
+    "catalog_grid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8",
+    "featured_spotlight": "grid grid-cols-1 md:grid-cols-12 gap-8 items-center",
+    "trust_badges_grid": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-12 border-y border-[#E5DCCE]"
+  },
+  "components": {
+    "navigation_bar": {
+      "path": "frontend/src/components/layout/Navbar.tsx",
+      "style": "Crystal glassmorphism (sticky top-0 z-50 bg-[#FAF7F2]/85 backdrop-blur-xl border-b border-[#E5DCCE])",
+      "links": [
+        { "name": "Trang chủ", "path": "/" },
+        { "name": "Bộ sưu tập", "path": "/catalog" },
+        { "name": "Không gian", "path": "/catalog?view=rooms" },
+        { "name": "Về Minh Lâm", "path": "/about" },
+        { "name": "Liên hệ & Showroom", "path": "/contact" }
+      ],
+      "actions": [
+        { "label": "Hotline: 0912 345 678", "type": "phone" },
+        { "label": "Tư vấn Zalo", "type": "zalo_button", "variant": "accent" }
+      ]
+    },
+    "floating_zalo": {
+      "path": "frontend/src/components/common/FloatingZaloWidget.tsx",
+      "description": "Nút Zalo nổi góc phải dưới màn hình với hiệu ứng xung nhịp nhẹ nhàng (pulse animation), tooltip 'Chat Zalo tư vấn ngay', mở trực tiếp Zalo web hoặc app với số hotline 0912345678",
+      "test_id": "floating-zalo-cta"
+    },
+    "editorial_marquee": {
+      "path": "frontend/src/components/home/EditorialMarquee.tsx",
+      "style": "bg-[#EAE3D5] text-[#3B3026] py-4 text-sm font-serif uppercase tracking-[0.2em] border-y border-[#DDD3C1]"
+    },
+    "hero_section": {
+      "path": "frontend/src/components/home/HeroSection.tsx",
+      "features": "Masked line reveal, badge 'BỘ SƯU TẬP 2026', dual CTA (Xem bộ sưu tập / Nhắn Zalo báo giá), quick stats (100% Gỗ tự nhiên, 500+ Dự án bàn giao, 5 Năm bảo hành)"
+    },
+    "category_cards": {
+      "path": "frontend/src/components/home/CategoryShowcase.tsx",
+      "categories": [
+        { "id": "phong-khach", "name": "Phòng Khách", "desc": "Sofa gỗ sồi, bàn trà wabi-sabi, kệ tivi tối giản", "count": "24 mẫu" },
+        { "id": "phong-an", "name": "Phòng Ăn", "desc": "Bàn ghế ăn gỗ óc chó, tủ buffet, ghế bọc nệm linen", "count": "18 mẫu" },
+        { "id": "phong-ngu", "name": "Phòng Ngủ", "desc": "Giường gỗ tự nhiên, bàn trang điểm, tab đầu giường", "count": "16 mẫu" },
+        { "id": "phong-lam-viec", "name": "Phòng Làm Việc", "desc": "Bàn làm việc nguyên tấm, giá sách thanh lịch", "count": "12 mẫu" },
+        { "id": "decor-phu-kien", "name": "Decor & Phụ Kiện", "desc": "Đèn mộc, bình gốm, thảm dệt tự nhiên", "count": "30 mẫu" },
+        { "id": "giay-dan-tuong", "name": "Giấy Dán Tường & Vật Liệu", "desc": "Giấy dệt sợi tự nhiên, ốp lam sóng gỗ cao cấp", "count": "15 mẫu" }
+      ]
+    },
+    "product_catalog": {
+      "path": "frontend/src/components/catalog/ProductGrid.tsx",
+      "features": "Bộ lọc danh mục, thanh tìm kiếm tiếng Việt, sắp xếp theo giá/mới nhất, filter theo loại gỗ (Sồi Bắc Mỹ, Óc Chó Walnut, Tần Bì Ash, Mây đan tự nhiên), thẻ sản phẩm có nút 'Hỏi giá qua Zalo' & 'Xem chi tiết'"
+    },
+    "product_detail": {
+      "path": "frontend/src/components/catalog/ProductDetailView.tsx",
+      "features": "Gallery ảnh nhiều góc độ, thông số kích thước (Dài x Rộng x Cao), chất liệu & hoàn thiện (Sơn lau dầu thực vật Rubio Monocoat an toàn), Form gửi yêu cầu tư vấn kích thước theo yêu cầu và nút Zalo gửi mã sản phẩm"
+    },
+    "trust_section": {
+      "path": "frontend/src/components/home/TrustSection.tsx",
+      "items": [
+        { "title": "Gỗ Tự Nhiên Chuẩn Xuất Khẩu", "desc": "Gỗ Sồi Mỹ, Óc Chó FAS tẩm sấy đạt chuẩn chống cong vênh mối mọt" },
+        { "title": "Hoàn Thiện Thủ Công Tinh Xảo", "desc": "Mộng gỗ truyền thống kết hợp dầu lau thực vật an toàn sức khoẻ" },
+        { "title": "Bảo Hành 5 Năm & Bảo Trì Trọn Đời", "desc": "Cam kết đồng hành và chăm sóc không gian sống dài lâu" },
+        { "title": "Tùy Chỉnh Theo Kích Thước", "desc": "Đo đạc và tinh chỉnh kích thước phù hợp hoàn hảo với ngôi nhà bạn" }
+      ]
+    },
+    "contact_form": {
+      "path": "frontend/src/components/contact/ContactForm.tsx",
+      "fields": [
+        { "name": "full_name", "label": "Họ và tên", "required": true },
+        { "name": "phone", "label": "Số điện thoại (liên hệ Zalo)", "required": true },
+        { "name": "email", "label": "Email", "required": false },
+        { "name": "category_interest", "label": "Sản phẩm / Không gian quan tâm", "type": "select" },
+        { "name": "message", "label": "Nội dung cần tư vấn hoặc kích thước riêng", "type": "textarea" }
+      ],
+      "test_ids": {
+        "form": "contact-inquiry-form",
+        "name_input": "contact-input-name",
+        "phone_input": "contact-input-phone",
+        "email_input": "contact-input-email",
+        "message_input": "contact-input-message",
+        "submit_button": "contact-submit-button"
+      }
+    },
+    "footer": {
+      "path": "frontend/src/components/layout/Footer.tsx",
+      "style": "bg-[#231B15] text-[#F5F0E8] pt-20 pb-12 border-t border-[#3A2D23]",
+      "huge_brand_mark": "MINH LÂM NỘI THẤT",
+      "showroom_info": {
+        "hanoi": "Showroom 1: 168 Nguyễn Xiển, Thanh Xuân, Hà Nội",
+        "hcm": "Showroom 2: 45 Đường số 7, KĐT An Phú, TP. Thủ Đức, TP.HCM",
+        "hotline": "0912 345 678",
+        "zalo": "0912 345 678",
+        "email": "lienhe@minhlamfurniture.vn",
+        "hours": "8:30 - 20:30 (Thứ 2 - Chủ Nhật)"
+      }
+    }
+  },
+  "curated_image_assets": {
+    "hero_main": {
+      "url": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3OTAyMDczNTB8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Không gian phòng khách nội thất gỗ tự nhiên ấm cúng Minh Lâm",
+      "usage": "Hero banner chính trang chủ với scrim gradient mộc"
+    },
+    "hero_secondary_parallax": {
+      "url": "https://images.pexels.com/photos/8251251/pexels-photo-8251251.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Không gian sống Japandi tối giản gỗ sồi",
+      "usage": "Hero section dynamic visual & about page showcase"
+    },
+    "categories": {
+      "living_room": "https://images.unsplash.com/photo-1693578616322-c8abe6c7393d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwzfHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3OTAyMDczNTB8MA&ixlib=rb-4.1.0&q=85",
+      "dining_room": "https://images.pexels.com/photos/18447739/pexels-photo-18447739.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "bedroom": "https://images.unsplash.com/photo-1610333684078-c89bd57f2e46?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwzfHxqYXBhbmVzZSUyMHNjYW5kaW5hdmlhbiUyMGZ1cm5pdHVyZSUyMGludGVyaW9yfGVufDB8fHx8MTc5MDIwNzM1MHww&ixlib=rb-4.1.0&q=85",
+      "workspace": "https://images.unsplash.com/photo-1597072689227-8882273e8f6a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwyfHxqYXBhbmVzZSUyMHNjYW5kaW5hdmlhbiUyMGZ1cm5pdHVyZSUyMGludGVyaW9yfGVufDB8fHx8MTc5MDIwNzM1MHww&ixlib=rb-4.1.0&q=85",
+      "decor": "https://images.pexels.com/photos/8251255/pexels-photo-8251255.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "wallpaper_and_materials": "https://images.pexels.com/photos/8251293/pexels-photo-8251293.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    "products": [
+      {
+        "id": "ml-sofa-komorebi",
+        "name": "Sofa Gỗ Sồi Komorebi 3 Chỗ",
+        "category": "phong-khach",
+        "price_vnd": "18.500.000 ₫",
+        "price_display": "18.500.000 ₫",
+        "wood_type": "Gỗ Sồi Trắng Bắc Mỹ (White Oak)",
+        "dimensions": "2200 x 850 x 780 mm",
+        "image": "https://images.unsplash.com/photo-1631510390389-c1e4fb20ff31?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3OTAyMDczNTB8MA&ixlib=rb-4.1.0&q=85",
+        "badge": "Bán chạy nhất"
+      },
+      {
+        "id": "ml-chair-asahi",
+        "name": "Ghế Đơn Gỗ Mây Asahi",
+        "category": "phong-khach",
+        "price_vnd": "4.800.000 ₫",
+        "price_display": "4.800.000 ₫",
+        "wood_type": "Gỗ Tần Bì (Ash) & Mây Mắt Cáo",
+        "dimensions": "650 x 700 x 750 mm",
+        "image": "https://images.pexels.com/photos/36123562/pexels-photo-36123562.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "badge": "Thiết kế mới"
+      },
+      {
+        "id": "ml-table-tsuki",
+        "name": "Bàn Trà Tròn Gỗ Nguyên Khối Tsuki",
+        "category": "phong-khach",
+        "price_vnd": "6.200.000 ₫",
+        "price_display": "6.200.000 ₫",
+        "wood_type": "Gỗ Sồi Mỹ nguyên khối",
+        "dimensions": "Đường kính 800 x Cao 380 mm",
+        "image": "https://images.unsplash.com/photo-1649083048770-82e8ffd80431?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHw0fHxtaW5pbWFsaXN0JTIwd29vZGVuJTIwZnVybml0dXJlJTIwbGl2aW5nJTIwcm9vbXxlbnwwfHx8fDE3OTAyMDczNTB8MA&ixlib=rb-4.1.0&q=85",
+        "badge": "Thủ công"
+      },
+      {
+        "id": "ml-dining-mori",
+        "name": "Bộ Bàn Ăn Gỗ Tự Nhiên Mori 6 Ghế",
+        "category": "phong-an",
+        "price_vnd": "22.900.000 ₫",
+        "price_display": "22.900.000 ₫",
+        "wood_type": "Gỗ Óc Chó Bắc Mỹ (Walnut FAS)",
+        "dimensions": "1800 x 850 x 750 mm",
+        "image": "https://images.unsplash.com/photo-1758977403865-f79e156415b3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwyfHx3YXJtJTIwd29vZCUyMGZ1cm5pdHVyZSUyMGRpbmluZyUyMGNoYWlyJTIwdGFibGV8ZW58MHx8fHwxNzkwMjA3MzUwfDA&ixlib=rb-4.1.0&q=85",
+        "badge": "Cao cấp"
+      },
+      {
+        "id": "ml-bench-kanso",
+        "name": "Băng Ghế Dài Tối Giản Kanso",
+        "category": "phong-an",
+        "price_vnd": "5.400.000 ₫",
+        "price_display": "5.400.000 ₫",
+        "wood_type": "Gỗ Tần Bì (Ash)",
+        "dimensions": "1400 x 380 x 450 mm",
+        "image": "https://images.unsplash.com/photo-1512972972907-6d71529c5e92?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHw0fHxqYXBhbmVzZSUyMHNjYW5kaW5hdmlhbiUyMGZ1cm5pdHVyZSUyMGludGVyaW9yfGVufDB8fHx8MTc5MDIwNzM1MHww&ixlib=rb-4.1.0&q=85",
+        "badge": ""
+      },
+      {
+        "id": "ml-desk-wabi",
+        "name": "Bàn Làm Việc Treo Tường / Chân Thanh Wabi",
+        "category": "phong-lam-viec",
+        "price_vnd": "8.600.000 ₫",
+        "price_display": "8.600.000 ₫",
+        "wood_type": "Gỗ Sồi Trắng hoàn thiện dầu thực vật",
+        "dimensions": "1400 x 600 x 750 mm",
+        "image": "https://images.unsplash.com/photo-1597072689227-8882273e8f6a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwyfHxqYXBhbmVzZSUyMHNjYW5kaW5hdmlhbiUyMGZ1cm5pdHVyZSUyMGludGVyaW9yfGVufDB8fHx8MTc5MDIwNzM1MHww&ixlib=rb-4.1.0&q=85",
+        "badge": "Gọn gàng"
+      },
+      {
+        "id": "ml-chair-vintage-kaori",
+        "name": "Ghế Ăn Tựa Nan Kaori",
+        "category": "phong-an",
+        "price_vnd": "2.200.000 ₫",
+        "price_display": "2.200.000 ₫",
+        "wood_type": "Gỗ Sồi Tự Nhiên",
+        "dimensions": "480 x 520 x 820 mm",
+        "image": "https://images.pexels.com/photos/11363691/pexels-photo-11363691.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "badge": ""
+      },
+      {
+        "id": "ml-cabinet-hikari",
+        "name": "Tủ Ngăn Kéo Gỗ Sáng Hikari",
+        "category": "decor-phu-kien",
+        "price_vnd": "12.500.000 ₫",
+        "price_display": "12.500.000 ₫",
+        "wood_type": "Gỗ Tần Bì & Veneer Sồi",
+        "dimensions": "1200 x 450 x 850 mm",
+        "image": "https://images.unsplash.com/photo-1653971858625-9cb23d0dca80?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHw0fHx3YXJtJTIwd29vZCUyMGZ1cm5pdHVyZSUyMGRpbmluZyUyMGNoYWlyJTIwdGFibGV8ZW58MHx8fHwxNzkwMjA3MzUwfDA&ixlib=rb-4.1.0&q=85",
+        "badge": "Độc quyền"
+      }
+    ],
+    "about_workshop": "https://images.unsplash.com/photo-1712232907812-4bd219a99a49?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwxfHxqYXBhbmVzZSUyMHNjYW5kaW5hdmlhbiUyMGZ1cm5pdHVyZSUyMGludGVyaW9yfGVufDB8fHx8MTc5MDIwNzM1MHww&ixlib=rb-4.1.0&q=85"
+  },
+  "motion_and_interactions": {
+    "lenis_setup": "Kích hoạt lenis smooth scroll trên root component với options: { lerp: 0.08, smoothWheel: true }",
+    "framer_motion": {
+      "stagger_variants": {
+        "hidden": { "opacity": 0 },
+        "visible": { "opacity": 1, "transition": { "staggerChildren": 0.08 } }
+      },
+      "item_reveal": {
+        "hidden": { "opacity": 0, "y": 24 },
+        "visible": { "opacity": 1, "y": 0, "transition": { "duration": 0.6, "ease": [0.16, 1, 0.3, 1] } }
+      },
+      "hero_headline_reveal": {
+        "initial": { "y": "100%", "opacity": 0 },
+        "animate": { "y": "0%", "opacity": 1 },
+        "transition": { "duration": 0.9, "ease": [0.16, 1, 0.3, 1] }
+      }
+    },
+    "zalo_click_handler": "Tạo đường link tự động mở chat Zalo: `https://zalo.me/0912345678` với tin nhắn soạn sẵn: `Xin chào Minh Lâm, tôi muốn tư vấn về sản phẩm [Tên sản phẩm] (Mã: [ID])`",
+    "micro_interactions": [
+      "Hover ảnh sản phẩm phóng nhẹ 1.04x với transition mượt 0.5s ease-out",
+      "Nút CTA có hiệu ứng ripple hoặc scale 0.98 khi active click",
+      "Thanh filter tag đổi nền be đậm và viền gỗ tức thì với animation transition background-color 0.2s ease",
+      "Thông báo sonner toast hiển thị trang nhã góc dưới phải khi gửi form thành công"
+    ]
+  },
+  "accessibility_and_standards": {
+    "wcag_compliance": "WCAG 2.1 AA đạt chuẩn tương phản tối thiểu 4.5:1 cho text thường (#231B15 trên nền #FAF7F2 đạt 14.8:1; #5C5248 trên #FAF7F2 đạt 6.2:1)",
+    "mobile_first": "Giao diện tối ưu tuyệt đối trên màn hình điện thoại (thanh điều hướng trượt êm ái Sheet shadcn, nút gọi & Zalo dính thanh dưới mobile bar, hình ảnh max-h-[75vh])",
+    "language": "100% tiếng Việt có dấu chuẩn ngữ pháp và thuật ngữ nội thất cao cấp",
+    "seo_meta": {
+      "title": "Nội Thất Minh Lâm | Đồ Gỗ Tự Nhiên Tối Giản & Ấm Áp",
+      "description": "Thương hiệu nội thất gỗ tự nhiên phong cách Japandi & Wabi-Sabi tại Việt Nam. Bàn ghế ăn, sofa phòng khách, giường ngủ cao cấp. Tư vấn thiết kế & báo giá Zalo nhanh chóng.",
+      "og_image": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwd29vZEN1cm5pdHVyZSUyMGxpdmluZyUyMHJvb218ZW58MHx8fHwxNzkwMjA3MzUwfDA&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "instructions_to_main_agent": {
+    "general": [
+      "Thay thế toàn bộ CSS variables trong `frontend/src/index.css` theo bảng màu be/nâu gỗ/kem tự nhiên đã định nghĩa.",
+      "Import font Lora Variable cho tiêu đề (font-serif) và Plus Jakarta Sans Variable cho nội dung (font-sans).",
+      "Cài đặt hoặc tích hợp `lenis` cho hiệu ứng cuộn mượt cao cấp phong cách Awwwards.",
+      "Xây dựng backend FastAPI (`backend/server.py` hoặc routers) cung cấp endpoint `/api/products` (lấy danh sách sản phẩm mẫu đã định nghĩa), `/api/products/{id}`, và `/api/contact` (lưu yêu cầu tư vấn vào MongoDB với validation Pydantic).",
+      "Tạo cơ chế fallback: Nếu backend tạm thời offline, frontend vẫn load dữ liệu tĩnh từ mock data sản phẩm mượt mà không lỗi trang trắng.",
+      "Toàn bộ các nút bấm và trường nhập liệu phải có `data-testid` theo quy chuẩn test tự động.",
+      "Đảm bảo nút Zalo nổi và các nút 'Tư vấn qua Zalo' trên từng thẻ sản phẩm hoạt động trơn tru (mở `https://zalo.me/0912345678` kèm nội dung định dạng sẵn).",
+      "Tránh tuyệt đối màu xanh neon, gradient màu tím/xanh AI hoặc phong cách Bootstrap cứng nhắc. Phải tôn vinh tinh thần Tối giản Ấm áp (Warm Minimalist / Japandi)."
+    ],
+    "backend_endpoints": [
+      "GET /api/products - Danh sách sản phẩm có phân trang, lọc theo category, search keyword",
+      "GET /api/products/{id} - Chi tiết sản phẩm",
+      "POST /api/contact - Tiếp nhận form liên hệ tư vấn, lưu MongoDB và trả về mã tiếp nhận"
+    ]
+  },
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy and organic wood border tones.",
+    "Use glass-morphism effects with backdrop filters (16-24px blur) for sticky headers and modal dialogs.",
+    "You MUST NOT apply universal transition (e.g. `transition: all`). Always add transitions for specific interactive properties.",
+    "You MUST NOT center align the app container, i.e. no app-wide `text-align: center` rule in the CSS entry.",
+    "Always use modern button styles like warm pill-shaped or crisp refined buttons with micro-interactions.",
+    "NEVER use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯 for icons. Use clean Lucide icons (e.g. `Sparkles`, `ShieldCheck`, `TreePine`, `Ruler`, `PhoneCall`, `MessageCircle`, `CheckCircle2`).",
+    "Every interaction needs micro-animations - hover states, transitions, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable (p-8, p-12, p-16, py-24). Cramped furniture catalogs look cheap.",
+    "Main agent relies on the curated image URLs provided in this file. NEVER use placeholder services (via.placeholder.com, etc.).",
+    "All interactive elements MUST include `data-testid` attribute in kebab-case."
+  ]
+}
